@@ -94,7 +94,14 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Thomas notes
 
-## Project Structure
+### Spotify colors
+
+Green   #1ED760
+White   #FFFFFF
+Black   #121212
+
+
+### Project Structure
 
 project/
 │
