@@ -105,7 +105,6 @@ Black   #121212
 
 project/
 │
-├── main.cpp
 ├── public/
 │   ├── ... other images
 │   ├── favicon.ino
@@ -114,27 +113,36 @@ project/
 │   └── site.webmanifest
 ├── src/
 │   ├── components/     # components
+|   |   ├── button/
+|   │   │   ├── button.css
+│   │   └   └── Button.tsx
 │   ├── containers/     # feature related containers like auth
 |   |   ├── auth/
 |   │   │   ├── AuthProviders.tsx
 │   |   │   ├── authSagas.ts
 │   │   |   ├── index.ts
 │   │   |   ├── selectors.ts
-│   │   └   └── slice.ts
+│   │   |   └── slice.ts
+|   |   ├── createPlaylist/
+|   │   │   ├── createPlaylist.css
+│   |   │   ├── createPlaylist.ts
+│   │   └   └── CreatePlaylistComponent.ts
 │   ├── store/          # redux logic
 │   │   ├── reducers.ts
 │   │   ├── sagas.ts
 │   │   └── store.ts
 │   ├── types/          # Typescript types 
 │   │   └── requests.ts
-│   ├── App.css
-│   ├── App.test.tsx
+│   ├── styles/         # Styles
+│   │   ├── App.css
+│   │   └── index.css
+│   ├── tests/          # Tests
+│   │   ├── App.test.tsx
+│   │   └── setupTests.ts
 │   ├── App.tsx
-│   ├── index.css
 │   ├── index.tsx
 │   ├── react-app-env.d.ts  #automatic generated, refernces to Types
-│   ├── reportWebVitals.ts  #track 
-│   └── setupTest.ts
+│   └── reportWebVitals.ts  #track 
 ├── .env
 ├── package.json
 ├── tsconfig.json

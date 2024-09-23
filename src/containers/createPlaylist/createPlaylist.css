@@ -1,5 +1,5 @@
-/* addPlaylist.css */
-.addPlaylist-overlay {
+/* createPlaylist.css */
+.createPlaylist-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -9,7 +9,7 @@
     z-index: 5;
 }
 
-.addPlaylist {
+.createPlaylist {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -25,14 +25,14 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.addPlaylist h2 {
+.createPlaylist h2 {
     font-family: 'Poppins', sans-serif;
     color: #FFFFFF;
     font-size: 24px;
     margin: 0;
 }
 
-.addPlaylist input, .addPlaylist textarea {
+.createPlaylist input, .createPlaylist textarea {
     font-family: 'Poppins', sans-serif;
     width: calc(100% - 20px);
     height: 24px;
@@ -41,26 +41,28 @@
     border-radius: 5px;
     color: #FFFFFF;
     border: 2px solid #2a2a2a;
+    transition: 0.2s;
 }
 
-.addPlaylist textarea {
+.createPlaylist textarea {
     height: 100px;
     resize: none;
 }
 
-.addPlaylist input::placeholder, .addPlaylist textarea::placeholder {
+.createPlaylist input::placeholder, .createPlaylist textarea::placeholder {
     color: #656565;
 }
 
-.addPlaylist input:focus, .addPlaylist textarea:focus {
+.createPlaylist input:focus, .createPlaylist textarea:focus {
     outline: none;
 }
 
-.addPlaylist input:focus-within, .addPlaylist textarea:focus-within {
+.createPlaylist input:focus-within, .createPlaylist textarea:focus-within {
     border: 2px solid #FFFFFF;
+    transition: 0.2s;
 }
 
-.playlist-container-buttons
+.createPlaylist-container-buttons
 {
     display: flex;
     gap: 8px;
