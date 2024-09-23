@@ -1,43 +1,59 @@
 import './styles/App.css';
-import React, { FC, ReactElement, useState } from "react";
+
+import React, { FC, ReactElement, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { authSelectors } from "./containers/auth/selectors";
+import { RootState } from '../src/store/store';
+
+//import { authSelectors } from "./containers/auth/selectors";
+import { toggleCreatePlaylist, displayAlert, hideAlert } from './appSlice';
 
 // Components
 import Button from "./components/button/Button";
-import AddPlaylist from "./components/addPlaylist/AddPlaylist";
+import Alert from "./components/alert/Alert";
+import CreatePlaylist from "./containers/createPlaylist/CreatePlaylistComponent";
 
 const App: FC = (): ReactElement => {
   const dispatch = useDispatch();
-  const user = useSelector(authSelectors.getUser);
+  //const user = useSelector(authSelectors.getUser);
+
+  const showCreatePlaylist = useSelector((state: RootState) => state.appSlice.showCreatePlaylist);
+  const showAlert = useSelector((state: RootState) => state.appSlice.showAlert);
+  const alertMessage = useSelector((state: RootState) => state.appSlice.alertMessage);
 
   const [draggedTrack, setDraggedTrack] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  
-  // State to control AddPlaylist visibility
-  const [showAddPlaylist, setShowAddPlaylist] = useState(false);
 
+  // TODO: Add drag and drop functionality
   const handleDragStart = (index: number) => {
     setDraggedTrack(index);
     setIsDragging(true);
   };
-
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     e.preventDefault();
     if (draggedTrack !== index) {
       // Handle drag logic, if necessary.
     }
   };
-
   const handleDrop = (index: number) => {
-    // Logic to reorder the tracks based on the drop position can go here.
     setDraggedTrack(null);
     setIsDragging(false);
   };
-
   const handleDragEnd = () => {
     setIsDragging(false);
     setDraggedTrack(null);
+  };
+
+  // Access error from Redux state
+  const playlistError = useSelector((state: RootState) => state.createPlaylist.error);
+
+  useEffect(() => {
+    if (playlistError) {
+      dispatch(displayAlert(playlistError));
+    }
+  }, [playlistError, dispatch]);
+
+  const handleAlertClose = () => {
+    dispatch(hideAlert());
   };
 
   return (
@@ -54,8 +70,8 @@ const App: FC = (): ReactElement => {
           </div>
           <Button label="Search" onClick={() => console.log("Search clicked")} />
         </div>
-        {/* Add the onClick to show AddPlaylist */}
-        <Button label="Add new playlist" onClick={() => setShowAddPlaylist(true)} />
+        {/* Add a dark/light button switch */}
+        <Button label="Add new playlist" onClick={() => dispatch(toggleCreatePlaylist())} />
         {/* Add profile icon with logout options */}
       </div>
 
@@ -114,7 +130,9 @@ const App: FC = (): ReactElement => {
         </div>
       </div>
 
-      {showAddPlaylist && <AddPlaylist onCancel={() => setShowAddPlaylist(false)} />}
+      {showCreatePlaylist && (<CreatePlaylist key={Math.random()} onCancel={() => dispatch(toggleCreatePlaylist())}/>)}
+
+      {showAlert && (<Alert message={alertMessage} onClose={handleAlertClose} />)}
     </>
   );
 };
