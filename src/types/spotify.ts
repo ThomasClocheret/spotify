@@ -60,6 +60,7 @@ export interface TrackObject {
 export interface Playlist {
     id: string;
     name: string;
+    description?: string;
     images: Array<{ url: string }>;
 }
 

@@ -2,12 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface UIState {
   showCreatePlaylist: boolean;
+  showEditPlaylist: boolean;
   showAlert: boolean;
   alertMessage: string;
 }
 
 const initialState: UIState = {
   showCreatePlaylist: false,
+  showEditPlaylist: false,
   showAlert: false,
   alertMessage: '',
 };
@@ -18,6 +20,9 @@ const appSlice = createSlice({
   reducers: {
     toggleCreatePlaylist: (state) => {
       state.showCreatePlaylist = !state.showCreatePlaylist;
+    },
+    toggleEditPlaylist: (state) => {
+      state.showEditPlaylist = !state.showEditPlaylist;
     },
     displayAlert: (state, action) => {
       state.showAlert = true;
@@ -30,6 +35,6 @@ const appSlice = createSlice({
   },
 });
 
-export const { toggleCreatePlaylist, displayAlert, hideAlert } = appSlice.actions;
+export const { toggleCreatePlaylist, toggleEditPlaylist, displayAlert, hideAlert } = appSlice.actions;
 
 export default appSlice.reducer;

@@ -45,9 +45,11 @@
   display: none;
   position: absolute;
   background-color: #2a2a2a;
-  border-radius: 5px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   padding: 5px;
-  margin-top: -5px;
+  margin-top: -3px;
   right: 24px;
   z-index: 10;
 }

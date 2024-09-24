@@ -1,5 +1,5 @@
-/* createPlaylist.css */
-.createPlaylist-overlay {
+/* playlistDetail.css */
+.playlistDetailsPanel-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -9,7 +9,7 @@
     z-index: 5;
 }
 
-.createPlaylist {
+.playlistDetailsPanel {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -25,14 +25,14 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.createPlaylist h2 {
+.playlistDetailsPanel h2 {
     font-family: 'Poppins', sans-serif;
     color: #FFFFFF;
     font-size: 24px;
     margin: 0;
 }
 
-.createPlaylist input, .createPlaylist textarea {
+.playlistDetailsPanel input, .playlistDetailsPanel textarea {
     font-family: 'Poppins', sans-serif;
     width: calc(100% - 20px);
     height: 24px;
@@ -44,24 +44,23 @@
     transition: 0.2s;
 }
 
-.createPlaylist textarea {
+.playlistDetailsPanel textarea {
     height: 100px;
     resize: none;
 }
 
-.createPlaylist input::placeholder, .createPlaylist textarea::placeholder {
+.playlistDetailsPanel input::placeholder, .playlistDetailsPanel textarea::placeholder {
     color: #656565;
 }
 
-.createPlaylist input:focus, .createPlaylist textarea:focus {
+.playlistDetailsPanel input:focus, .playlistDetailsPanel textarea:focus {
     outline: none;
 }
 
-.createPlaylist input:focus-within, .createPlaylist textarea:focus-within {
+.playlistDetailsPanel input:focus-within, .playlistDetailsPanel textarea:focus-within {
     border: 2px solid #FFFFFF;
     transition: 0.2s;
 }
-
 
 /* Toggle container to align the switch and label */
 .toggle-container {
@@ -125,28 +124,7 @@ input:checked + .slider:before {
     text-transform: capitalize;
 }
 
-
-
-
-
-/* Style for the label */
-.createPlaylist label {
-    color: #FFFFFF;
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    margin-left: 8px;
-}
-
-
-
-
-
-
-
-
-
-.createPlaylist-container-buttons
-{
+.playlistDetailsPanel-container-buttons {
     display: flex;
     gap: 8px;
     margin-left: auto;
