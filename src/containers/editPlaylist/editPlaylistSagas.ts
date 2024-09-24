@@ -12,7 +12,9 @@ import {
   removeTrackRequest,
   removeTrackSuccess,
   removeTrackFailure,
-
+  updatePlaylistRequest,
+  updatePlaylistSuccess,
+  updatePlaylistFailure,
 } from './slice';
 import { authSelectors } from '../auth/selectors';
 
@@ -26,6 +28,13 @@ interface ReorderTracksPayload {
 interface AddTrackPayload {
   playlistId: string;
   trackUri: string;
+}
+
+interface UpdatePlaylistPayload {
+  playlistId: string;
+  name: string;
+  description?: string;
+  public?: boolean;
 }
 
 function* reorderTracksSaga(
@@ -156,7 +165,46 @@ function* removeTrackSaga(action: PayloadAction<AddTrackPayload>): Generator<any
   }
 }
 
+const updatePlaylistApi = (
+  playlistId: string,
+  accessToken: string,
+  name: string,
+  description: string,
+  isPublic: boolean
+) => {
+  return axios.put(
+    `https://api.spotify.com/v1/playlists/${playlistId}`,
+    {
+      name,
+      description,
+      public: isPublic,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+};
+
+function* updatePlaylistSaga(action: PayloadAction<UpdatePlaylistPayload>): Generator<any, void, any> {
+  try {
+    const { playlistId, name, description = '', public: isPublic = true } = action.payload;
+    const accessToken: string = yield select(authSelectors.getAccessToken);
+
+    const response = yield call(() => updatePlaylistApi(playlistId, accessToken, name, description, isPublic));
+
+    yield put(updatePlaylistSuccess());
+    console.log('Playlist updated successfully:', response.data);
+  } catch (error: any) {
+    console.error('Error updating playlist:', error);
+    yield put(updatePlaylistFailure(error.message));
+  }
+}
+
 export default function* editPlaylistSaga() {
+  yield takeEvery(updatePlaylistRequest.type, updatePlaylistSaga);
   yield takeEvery(reorderTracksRequest.type, reorderTracksSaga);
   yield takeEvery(addTrackRequest.type, addTrackSaga);
   yield takeEvery(removeTrackRequest.type, removeTrackSaga);

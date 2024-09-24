@@ -1,20 +1,28 @@
-// src/slices/editPlaylist/slice.ts
-
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAction } from '@reduxjs/toolkit';
 
 interface EditPlaylistState {
   isLoading: boolean;
   success: boolean;
   error: string | null;
-  snapshotId: string | null; // Manages the current snapshot ID
+  snapshotId: string | null;
 }
 
 const initialState: EditPlaylistState = {
   isLoading: false,
   success: false,
   error: null,
-  snapshotId: null, // Initialize snapshotId
+  snapshotId: null,
 };
+
+export const updatePlaylistRequest = createAction<{
+  playlistId: string;
+  name: string;
+  description?: string;
+  public?: boolean;
+}>('editPlaylist/updatePlaylistRequest');
+
+export const updatePlaylistSuccess = createAction('editPlaylist/updatePlaylistSuccess');
+export const updatePlaylistFailure = createAction<string>('editPlaylist/updatePlaylistFailure');
 
 interface ReorderTracksPayload {
   playlistId: string;
@@ -85,7 +93,7 @@ export const {
   addTrackFailure,
   removeTrackRequest,
   removeTrackSuccess,
-  removeTrackFailure
+  removeTrackFailure,
 } = editPlaylistSlice.actions;
 
 export default editPlaylistSlice.reducer;

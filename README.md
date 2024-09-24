@@ -178,4 +178,12 @@ Alerting on the entire application
 
 Clean up all code
 
-set playlist description
+adding and remove tracks via search correctly 
+
+removing tracks via playlist
+
+
+Extra time
+
+Adding filters 
+
