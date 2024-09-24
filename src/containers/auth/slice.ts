@@ -15,6 +15,7 @@ const REDIRECT_URI = window.location.origin;
 export interface User {
   userId?: string;
   userName?: string;
+  userImage?: string;
 }
 
 export interface AuthState {
@@ -53,6 +54,25 @@ const authSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       window.history.pushState({ REDIRECT_URI }, "", REDIRECT_URI);
     },
+    logOut(state) {
+      const { REACT_APP_BASE_URL } = process.env;
+      // Remove cookies
+      const deleteCookie = (cookieName: string, domain: string, path: string = '/') => {
+        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}; domain=${domain};`;
+      };
+
+      // Delete cookies by specifying the domain and path
+      deleteCookie('sp_dc', '.spotify.com', '/');
+      deleteCookie('sp_key', '.spotify.com', '/');
+      deleteCookie('sp_landing', '.spotify.com', '/');
+      deleteCookie('sp_t', '.spotify.com', '/');
+      state.accessToken = undefined;
+      state.user = undefined;
+      state.status = RequestStatus.IDLE;
+
+      // Redirect back to your app after logout
+      window.location.href = `${REACT_APP_BASE_URL}`;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -70,6 +90,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { login, setAccessToken } = authSlice.actions;
+export const { login, setAccessToken, logOut } = authSlice.actions;
 
 export default authSlice.reducer;

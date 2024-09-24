@@ -62,6 +62,89 @@
     transition: 0.2s;
 }
 
+
+/* Toggle container to align the switch and label */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* The switch itself */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 35px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #656565;
+    transition: 0.4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background-color: white;
+    transition: 0.4s;
+    left: 2px;
+    bottom: 2px;
+}
+
+input:checked + .slider {
+    background-color: #1ED760;
+}
+
+input:checked + .slider:before {
+    transform: translateX(15px);
+}
+
+.toggle-label {
+    font-family: 'Poppins', sans-serif;
+    color: #FFFFFF;
+    margin-left: 10px;
+    font-size: 16px;
+    text-transform: capitalize;
+}
+
+
+
+
+
+/* Style for the label */
+.createPlaylist label {
+    color: #FFFFFF;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    margin-left: 8px;
+}
+
+
+
+
+
+
+
+
+
 .createPlaylist-container-buttons
 {
     display: flex;

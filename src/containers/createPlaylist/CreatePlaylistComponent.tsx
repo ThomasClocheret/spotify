@@ -59,14 +59,15 @@ const CreatePlaylistComponent: FC<CreatePlaylistProps> = ({ onCancel }): ReactEl
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <div>
-          <label>
+        <div className="toggle-container">
+          <span className="toggle-label">{isPublic ? 'Public' : 'Private'}</span>
+          <label className="switch">
             <input
               type="checkbox"
               checked={isPublic}
               onChange={(e) => setIsPublic(e.target.checked)}
             />
-            Public
+            <span className="slider"></span>
           </label>
         </div>
         <div className="createPlaylist-container-buttons">

@@ -4,8 +4,9 @@ import React, { FC, ReactElement, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../src/store/store';
 
-//import { authSelectors } from "./containers/auth/selectors";
+import { authSelectors } from "./containers/auth/selectors";
 import { toggleCreatePlaylist, displayAlert, hideAlert } from './appSlice';
+import { logOut } from './containers/auth/slice';
 
 // Components
 import Button from "./components/button/Button";
@@ -19,7 +20,7 @@ import type { PlaylistTrack } from './types/spotify';
 
 const App: FC = (): ReactElement => {
   const dispatch = useDispatch();
-  //const user = useSelector(authSelectors.getUser); // not used now later TODO add logout button
+  const user = useSelector(authSelectors.getUser);
 
   const showCreatePlaylist = useSelector((state: RootState) => state.appSlice.showCreatePlaylist);
   const showAlert = useSelector((state: RootState) => state.appSlice.showAlert);
@@ -42,6 +43,11 @@ const App: FC = (): ReactElement => {
     dispatch(hideAlert());
   };
 
+  // Log out user
+  const handleLogOut = () => {
+    dispatch(logOut());
+  };
+
   return (
     <>
       <div className='header-container'>
@@ -49,9 +55,20 @@ const App: FC = (): ReactElement => {
           <SearchBar />
           <Button label="Search" onClick={() => console.log("Search clicked")} />
         </div>
-        {/* Add a dark/light button switch */}
-        <Button label="Add new playlist" onClick={() => dispatch(toggleCreatePlaylist())} />
-        {/* Add profile icon with logout options */}
+        <div className='header-container-right'>
+          {/* Add a dark/light button switch */}
+          <Button label="Add new playlist" onClick={() => dispatch(toggleCreatePlaylist())} />
+          <div className='account'>
+            <div className="account-profile">
+              <img src={user?.userImage || "https://via.placeholder.com/33"} alt="profile" />
+            </div>
+            <div className='drop-down'>
+              <p>Account: {user?.userName || "Profile"}</p>
+              <p onClick={handleLogOut}>Log out</p>
+            </div>
+          </div>
+        </div>
+        
       </div>
 
       <div className='content-container'>
