@@ -15,7 +15,7 @@ function* getUserIdSaga() {
       });
     const { data } = yield call(request);
 
-    yield put(getUserSuccess({ userId: data.id, userName: data.display_name }));
+    yield put(getUserSuccess({ userId: data.id, userName: data.display_name, userImage: data.images[0].url }));
   } catch (error: any) {
     yield put(getUserFailed({ message: error.message }));
   }

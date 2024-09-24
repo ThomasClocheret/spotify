@@ -166,3 +166,16 @@ project/
 ### Remarks 
 
 [.nvmrc] says v16.14.2 but I to work with the latest versions what do you prefer any best practises #nvm use
+
+
+TODO
+
+Auto load in the daily discovery playlist 
+
+Re-order clear alerting 
+
+Alerting on the entire application 
+
+Clean up all code
+
+set playlist description

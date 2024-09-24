@@ -15,7 +15,7 @@ const AuthProvider: FC<AuthProviderProps> = ({
   const accessToken = useSelector(authSelectors.getAccessToken);
 
   const { location } = window;
-  const regex = /.*access_token=(?<accesToken>[^&]*)/gi;
+  const regex = /.*access_token=(?<accesToken>[^&]*)/gi; // The regex with named capturing groups requires at least ES2018. So I updated the tsconfig.json file to target "es2018" or later instead of "es5"
   const params = regex.exec(location.hash);
 
   if (!accessToken && params == null) {
