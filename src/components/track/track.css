@@ -1,0 +1,125 @@
+/* Track.css */
+.track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #2a2a2a;
+    padding: 12px;
+    padding-left: 2px;
+    border-radius: 5px;
+    transition: background-color 0.2s, border 0.2s ease-in-out;
+}
+
+.track:hover {
+    background-color: #1f1f1f;
+    cursor: pointer;
+}
+
+.track-detail {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 16px;
+}
+
+.track img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+.track-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.track-info p {
+    color: white;
+    font-size: 14px;
+    margin: 0;
+}
+
+.track-info p:first-child {
+    font-weight: bold;
+}
+
+.track-details {
+    color: #b3b3b3;
+    text-align: center;
+    justify-content: center;
+    font-size: 12px;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.track-details:nth-child(4) {
+    margin-right: 30px;
+}
+
+.track-actions {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.track-actions svg {
+    width: 24px;
+    height: 24px;
+    margin-top: 3px;
+    fill: #656565;
+    transition: fill 0.2s ease-in-out;
+}
+
+.track-actions:hover svg {
+    fill: #ffffff;
+}
+
+.track-drag {
+    width: 10px;
+    left: -40px;
+    opacity: 0;
+    transition: 0.2s;
+}
+
+.track-drag:hover {
+    opacity: 1;
+    width: 30px;
+    left: 0;
+    cursor: grab;
+}
+
+.track-drag svg {
+    width: 24px;
+    height: 24px;
+    margin-top: 6px;
+    margin-left: 3px;
+    fill: #ffffff;
+}
+
+.track.dragging {
+    border: 2px solid #1ed760;
+    background-color: #1e1e1e;
+    opacity: 0.9;
+}
+
+.dragged-track .track {
+    border: 2px solid #1ed760;
+    background-color: #1e1e1e;
+    opacity: 0.9;
+    cursor: grabbing;
+}
+
+.track.hidden {
+    visibility: hidden;
+}
+
+.track-placeholder {
+    height: 50px;
+    transition: 0.2s;
+}

@@ -1,6 +1,6 @@
 import './styles/App.css';
 
-import React, { FC, ReactElement, useState, useEffect } from "react";
+import React, { FC, ReactElement, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../src/store/store';
 
@@ -11,37 +11,22 @@ import { toggleCreatePlaylist, displayAlert, hideAlert } from './appSlice';
 import Button from "./components/button/Button";
 import Alert from "./components/alert/Alert";
 import CreatePlaylist from "./containers/createPlaylist/CreatePlaylistComponent";
+import PlaylistSelector from "./containers/selectPlaylist/PlaylistSelector";
+import TrackList from './containers/selectPlaylist/TrackList';
+
+import type { PlaylistTrack } from './types/spotify';
 
 const App: FC = (): ReactElement => {
   const dispatch = useDispatch();
-  //const user = useSelector(authSelectors.getUser);
+  //const user = useSelector(authSelectors.getUser); // not used now later TODO add logout button
 
   const showCreatePlaylist = useSelector((state: RootState) => state.appSlice.showCreatePlaylist);
   const showAlert = useSelector((state: RootState) => state.appSlice.showAlert);
   const alertMessage = useSelector((state: RootState) => state.appSlice.alertMessage);
 
-  const [draggedTrack, setDraggedTrack] = useState<number | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-
-  // TODO: Add drag and drop functionality
-  const handleDragStart = (index: number) => {
-    setDraggedTrack(index);
-    setIsDragging(true);
-  };
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-    e.preventDefault();
-    if (draggedTrack !== index) {
-      // Handle drag logic, if necessary.
-    }
-  };
-  const handleDrop = (index: number) => {
-    setDraggedTrack(null);
-    setIsDragging(false);
-  };
-  const handleDragEnd = () => {
-    setIsDragging(false);
-    setDraggedTrack(null);
-  };
+  // Tracks from the selected playlist
+  const selectedPlaylist = useSelector((state: RootState) => state.selectPlaylist.selectedPlaylist);
+  const tracks = useSelector((state: RootState) => state.selectPlaylist.tracks as PlaylistTrack[]);
 
   // Access error from Redux state
   const playlistError = useSelector((state: RootState) => state.createPlaylist.error);
@@ -78,15 +63,9 @@ const App: FC = (): ReactElement => {
       <div className='content-container'>
         <div className="playlist-select">
           <div className="playlist-select-left">
-            <div className="playlist-selector">
-              <img src="https://via.placeholder.com/32" alt="playlist" />
-              <p>My Playlist</p>
-              <svg className="chevron-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7.41 8.42L12 13l4.59-4.58L18 10l-6 6-6-6z"></path>
-              </svg>
-            </div>
+            <PlaylistSelector />
             <Button label="Edit playlist" onClick={() => console.log("Edit playlist clicked")} />
-            <p>selected playlist description</p>
+            <p>set playlist description</p>
           </div>
           <div className="filter-icon">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -96,41 +75,14 @@ const App: FC = (): ReactElement => {
         </div>
 
         <div className="track-list">
-          {[...Array(4)].map((_, index) => (
-            <div
-              className={`track ${draggedTrack === index ? "dragging" : ""} ${isDragging ? "is-dragging" : ""}`}
-              key={index}
-              draggable
-              onDragStart={() => handleDragStart(index)}
-              onDragOver={(e) => handleDragOver(e, index)}
-              onDrop={() => handleDrop(index)}
-              onDragEnd={handleDragEnd}
-            >
-              <div className="track-drag">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6 11h12v2H6zm0 4h12v2H6zm0-8h12v2H6z"></path>
-                </svg>
-              </div>
-              <div className="track-detail">
-                <img src="https://via.placeholder.com/50" alt="track" />
-                <div className="track-info">
-                  <p>Track title {index + 1}</p>
-                  <p>Artist</p>
-                </div>
-                <p className='track-details'>Album</p>
-                <p className='track-details'>Release date</p>
-                <div className="track-actions">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0-5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 10a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          ))}
+          <TrackList
+            tracks={tracks}
+            playlistId={selectedPlaylist!}
+          />
         </div>
       </div>
 
-      {showCreatePlaylist && (<CreatePlaylist key={Math.random()} onCancel={() => dispatch(toggleCreatePlaylist())}/>)}
+      {showCreatePlaylist && (<CreatePlaylist key={Math.random()} onCancel={() => dispatch(toggleCreatePlaylist())} />)}
 
       {showAlert && (<Alert message={alertMessage} onClose={handleAlertClose} />)}
     </>

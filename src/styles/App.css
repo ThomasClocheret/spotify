@@ -64,17 +64,13 @@
 }
 
 
-
-
-
-
-
 /* Content and rest of screen */
 .content-container {
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding: 24px;
+  padding-top: 0;
   background-color: #121212;
 }
 
@@ -91,46 +87,7 @@
   gap: 10px;
 }
 
-/* Playlist Selector Styling */
-.playlist-selector {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background-color: #2a2a2a;
-  border-radius: 5px;
-  padding: 4px;
-  transition: border-color 0.2s ease-in-out;
-  border: 2px solid #2a2a2a;
-  cursor: pointer;
-}
-
-.playlist-selector img {
-  width: 32px;
-  height: 32px;
-  border-radius: 5px;
-}
-
-.playlist-selector p {
-  color: white;
-  font-size: 16px;
-  margin: 0;
-}
-
-.playlist-selector .chevron-icon {
-  margin-left: auto;
-  width: 16px;
-  height: 16px;
-  fill: #656565;
-  transition: fill 0.2s ease-in-out;
-}
-
-.playlist-selector:hover .chevron-icon {
-  fill: #FFFFFF;
-}
-
-.playlist-select p {
-  color: #b3b3b3;
-  font-size: 14px;
+.playlist-select-left p {
   margin: 0;
 }
 
@@ -141,107 +98,9 @@
   gap: 16px;
 }
 
-/* Individual Track Styling */
-.track {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background-color: #2a2a2a;
-  padding: 12px;
-  padding-left: 2px;
-  border-radius: 5px;
-  transition: background-color 0.2s, border 0.2s ease-in-out;
-}
 
-.track:hover {
-  background-color: #1f1f1f;
-  cursor: pointer;
-}
 
-.track-detail {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: 16px;
-}
 
-.track img {
-  width: 50px;
-  height: 50px;
-  border-radius: 5px;
-}
-
-.track-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.track-info p {
-  color: white;
-  font-size: 14px;
-  margin: 0;
-}
-
-.track-info p:first-child {
-  font-weight: bold;
-}
-
-.track-details {
-  color: #b3b3b3;
-  text-align: center;
-  justify-content: center;
-  font-size: 12px;
-  margin: 0;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Track Drag Icon (hover effect) */
-.track-drag {
-  width: 10px;
-  left: -40px; 
-  opacity: 0;
-  transition: 0.2s;
-}
-
-.track-drag:hover {
-  opacity: 1;
-  width: 30px;
-  left: 0;
-  cursor: grab;
-}
-
-.track-drag svg {
-  width: 24px;
-  height: 24px;
-  margin-top: 6px;
-  margin-left: 3px;
-  fill: #ffffff;
-}
-
-/* Track Actions (Three Dots) */
-.track-actions {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.track-actions svg {
-  width: 24px;
-  height: 24px;
-  margin-top: 3px;
-  fill: #656565;
-  transition: fill 0.2s ease-in-out;
-}
-
-.track-actions:hover svg {
-  fill: #ffffff;
-}
 
 /* Filter Icon on the right */
 .filter-icon {
@@ -259,27 +118,4 @@
 
 .filter-icon:hover svg {
   fill: #ffffff;
-}
-
-/* Dragging Styling */
-.track-dragging {
-  border: 2px solid #1ED760;
-  cursor: grabbing;
-  background-color: #1e1e1e;
-}
-.track.dragging {
-  border: 2px solid #1ED760;
-  cursor: grabbing;
-}
-.track.dragging ~ .track {
-  transform: translateY(10px);
-  transition: transform 0.2s ease;
-}
-
-.track-placeholder {
-  height: 80px;
-  background-color: #1ED760;
-  margin-bottom: 16px;
-  border-radius: 5px;
-  transition: background-color 0.2s ease-in-out;
 }
