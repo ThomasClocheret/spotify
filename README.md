@@ -125,8 +125,17 @@ project/
 │   │   |   └── slice.ts
 |   |   ├── createPlaylist/
 |   │   │   ├── createPlaylist.css
-│   |   │   ├── createPlaylist.ts
-│   │   └   └── CreatePlaylistComponent.ts
+│   |   │   ├── CreatePlaylistComponent.tsx
+│   |   │   ├── createPlaylistSagas.ts
+│   │   |   └── slice.ts
+|   |   ├── selectPlaylist/
+|   │   │   ├── playlistSelector.css
+│   |   │   ├── PlaylistSelector.tsx
+│   |   │   ├── selectPlaylistSagas.ts
+│   │   |   └── slice.ts
+|   |   ├── editPlaylist/
+│   |   │   ├── editPlaylistSagas.ts
+│   │   |   └── slice.ts
 │   ├── store/          # redux logic
 │   │   ├── reducers.ts
 │   │   ├── sagas.ts
