@@ -76,7 +76,7 @@ const PlaylistSelector: React.FC = () => {
                                 </div>
                             ))
                         ) : (
-                            <p>No playlists available</p>
+                            <p className="playlist-error">No playlists available</p>
                         )}
                     </div>
                 </div>

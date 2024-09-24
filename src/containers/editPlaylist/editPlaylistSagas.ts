@@ -1,14 +1,20 @@
 // src/sagas/editPlaylistSagas.ts
-
-import { call, put, takeEvery, select } from 'redux-saga/effects';
 import axios from 'axios';
+import { call, put, takeEvery, select } from 'redux-saga/effects';
+import { PayloadAction } from '@reduxjs/toolkit';
 import {
   reorderTracksRequest,
   reorderTracksSuccess,
   reorderTracksFailure,
+  addTrackRequest,
+  addTrackSuccess,
+  addTrackFailure,
+  removeTrackRequest,
+  removeTrackSuccess,
+  removeTrackFailure,
+
 } from './slice';
 import { authSelectors } from '../auth/selectors';
-import { PayloadAction } from '@reduxjs/toolkit';
 
 interface ReorderTracksPayload {
   playlistId: string;
@@ -17,8 +23,9 @@ interface ReorderTracksPayload {
   snapshotId: string | null;
 }
 
-interface ReorderTracksSuccessPayload {
-  newSnapshotId: string;
+interface AddTrackPayload {
+  playlistId: string;
+  trackUri: string;
 }
 
 function* reorderTracksSaga(
@@ -94,6 +101,63 @@ function* reorderTracksSaga(
   }
 }
 
+function* addTrackSaga(action: PayloadAction<AddTrackPayload>): Generator<any, void, any> {
+  try {
+    const accessToken: string = yield select(authSelectors.getAccessToken);
+    const { playlistId, trackUri } = action.payload;
+
+    const requestBody = {
+      uris: [trackUri],
+    };
+
+    const response = yield call(() =>
+      axios.post(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, requestBody, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
+    );
+
+    yield put(addTrackSuccess());
+    console.log('Track added successfully:', response.data);
+  } catch (error: any) {
+    console.error('Error adding track:', error);
+    const errorMessage = error.response?.data?.error?.message || 'Failed to add track';
+    yield put(addTrackFailure(errorMessage));
+  }
+}
+
+function* removeTrackSaga(action: PayloadAction<AddTrackPayload>): Generator<any, void, any> {
+  try {
+    const accessToken: string = yield select(authSelectors.getAccessToken);
+    const { playlistId, trackUri } = action.payload;
+
+    const requestBody = {
+      tracks: [{ uri: trackUri }]
+    };
+
+    const response = yield call(() =>
+      axios.delete(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        data: requestBody  // Axios DELETE requires 'data' to send a request body
+      })
+    );
+
+    yield put(removeTrackSuccess());
+    console.log('Track removed successfully:', response.data);
+  } catch (error: any) {
+    console.error('Error removing track:', error);
+    const errorMessage = error.response?.data?.error?.message || 'Failed to remove track';
+    yield put(removeTrackFailure(errorMessage));
+  }
+}
+
 export default function* editPlaylistSaga() {
   yield takeEvery(reorderTracksRequest.type, reorderTracksSaga);
+  yield takeEvery(addTrackRequest.type, addTrackSaga);
+  yield takeEvery(removeTrackRequest.type, removeTrackSaga);
 }

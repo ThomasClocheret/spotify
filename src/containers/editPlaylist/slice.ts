@@ -27,27 +27,49 @@ interface ReorderTracksSuccessPayload {
   newSnapshotId: string;
 }
 
+interface AddTrackPayload {
+  playlistId: string;
+  trackUri: string;
+}
+
 const editPlaylistSlice = createSlice({
   name: 'editPlaylist',
   initialState,
   reducers: {
-    reorderTracksRequest: (
-      state,
-      action: PayloadAction<ReorderTracksPayload>
-    ) => {
+    addTrackRequest: (state, action: PayloadAction<AddTrackPayload>) => {
       state.isLoading = true;
       state.success = false;
       state.error = null;
     },
-    reorderTracksSuccess: (
-      state,
-      action: PayloadAction<ReorderTracksSuccessPayload>
-    ) => {
+    addTrackSuccess: (state) => {
+      state.isLoading = false;
+      state.success = true;
+    },
+    addTrackFailure: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    reorderTracksRequest: (state, action: PayloadAction<ReorderTracksPayload>) => {
+      state.isLoading = true;
+      state.success = false;
+      state.error = null;
+    },
+    reorderTracksSuccess: (state, action: PayloadAction<ReorderTracksSuccessPayload>) => {
       state.isLoading = false;
       state.success = true;
       state.snapshotId = action.payload.newSnapshotId;
     },
     reorderTracksFailure: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    removeTrackRequest: (state, action: PayloadAction<AddTrackPayload>) => {
+      state.isLoading = true;
+    },
+    removeTrackSuccess: (state) => {
+      state.isLoading = false;
+    },
+    removeTrackFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       state.error = action.payload;
     },
@@ -58,6 +80,12 @@ export const {
   reorderTracksRequest,
   reorderTracksSuccess,
   reorderTracksFailure,
+  addTrackRequest,
+  addTrackSuccess,
+  addTrackFailure,
+  removeTrackRequest,
+  removeTrackSuccess,
+  removeTrackFailure
 } = editPlaylistSlice.actions;
 
 export default editPlaylistSlice.reducer;
