@@ -52,6 +52,7 @@
     margin-left: auto;
     margin-right: auto;
 }
+
 .track-details:nth-child(4) {
     margin-right: 30px;
 }
@@ -79,14 +80,6 @@
     fill: #ffffff;
 }
 
-
-
-
-
-
-
-
-/* Dragging Styling TODO fix and make it cool */
 .track-drag {
     width: 10px;
     left: -40px;
@@ -126,28 +119,7 @@
     visibility: hidden;
 }
 
-/* Placeholder Styling */
 .track-placeholder {
-    height: 10px;
+    height: 50px;
     transition: 0.2s;
 }
-
-
-.track:hover {
-    background-color: #1f1f1f;
-    cursor: pointer;
-  }
-  
-  .track.dragging {
-    background-color: rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  }
-  
-  
-  .track-placeholder {
-    height: 50px; /* Same as track height */
-  }
-
-
-  

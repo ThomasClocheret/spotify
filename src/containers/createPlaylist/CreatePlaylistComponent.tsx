@@ -20,7 +20,6 @@ const CreatePlaylistComponent: FC<CreatePlaylistProps> = ({ onCancel }): ReactEl
   const dispatch = useDispatch();
 
   const status = useSelector((state: RootState) => state.createPlaylist.status);
-  const error = useSelector((state: RootState) => state.createPlaylist.error);
 
   // Reset state when component mounts (i.e., when modal is opened)
   useEffect(() => {

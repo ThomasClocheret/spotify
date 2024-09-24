@@ -26,17 +26,39 @@ function* reorderTracksSaga(
 ): Generator<any, void, any> {
   try {
     const accessToken: string = yield select(authSelectors.getAccessToken);
-    const { playlistId, rangeStart, insertBefore, snapshotId } = action.payload;
+    const { playlistId, rangeStart, insertBefore } = action.payload;
 
-    // Construct the request body based on Spotify's API requirements
+    // Step 1: Fetch the current snapshot_id from the playlist
+    const playlistResponse = yield call(() =>
+      axios.get(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
+    );
+
+    console.log('Fetched playlist data:', playlistResponse.data);
+
+    const currentSnapshotId: string = playlistResponse.data.snapshot_id;
+
+    if (!currentSnapshotId) {
+      throw new Error('Failed to retrieve snapshot_id from playlist data.');
+    }
+
+    console.log('Current snapshot_id:', currentSnapshotId);
+
+    // Step 2: Construct the request body with the latest snapshot_id
     const requestBody: any = {
       range_start: rangeStart,
       insert_before: insertBefore,
-      // Spotify's API allows omitting snapshot_id, so include it only if available
-      ...(snapshotId && { snapshot_id: snapshotId }),
+      range_length: 1,
+      snapshot_id: currentSnapshotId,
     };
 
-    // Make the PUT request to reorder tracks
+    console.log('Reordering tracks request:', JSON.stringify(requestBody, null, 2));
+
+    // Step 3: Make the PUT request to reorder tracks
     const response = yield call(() =>
       axios.put(
         `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
@@ -50,16 +72,14 @@ function* reorderTracksSaga(
       )
     );
 
-    // Extract the new snapshot_id from the response
     const newSnapshotId: string = response.data.snapshot_id;
 
-    // Dispatch success action with the new snapshot_id
+    // Step 4: Dispatch success action with the new snapshot_id
     yield put(reorderTracksSuccess({ newSnapshotId }));
     console.log('Tracks reordered successfully:', response.data);
   } catch (error: any) {
     console.error('Error reordering tracks:', error);
 
-    // Log detailed error information
     if (error.response) {
       console.error('Response data:', JSON.stringify(error.response.data, null, 2));
       console.error('Response status:', error.response.status);
