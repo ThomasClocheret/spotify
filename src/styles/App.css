@@ -15,55 +15,6 @@
   gap: 10px;
 }
 
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background-color: #2a2a2a;
-  border-radius: 5px;
-  padding: 6px 12px;
-  transition: border-color 0.2s ease-in-out;
-  border: 2px solid #2a2a2a;
-}
-
-.search-icon {
-  width: 24px;
-  height: 24px;
-}
-
-.search-icon svg path {
-  fill: #656565;
-  transition: fill 0.2s ease-in-out;
-}
-
-.search input {
-  font-family: 'Poppins', sans-serif;
-  height: 24px;
-  border: none;
-  background-color: #2a2a2a;
-  color: white;
-  font-size: 16px;
-  min-width: 250px;
-  width: 40vw;
-}
-
-.search input::placeholder {
-  color: #656565;
-}
-
-.search input:focus {
-  outline: none;
-}
-
-.search-bar:focus-within .search-icon svg path {
-  fill: #FFFFFF;
-}
-
-.search-bar:focus-within {
-  border: 2px solid #FFFFFF;
-}
-
-
 /* Content and rest of screen */
 .content-container {
   display: flex;

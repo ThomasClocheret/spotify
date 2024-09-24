@@ -117,31 +117,36 @@ project/
 |   │   │   ├── button.css
 │   │   └   └── Button.tsx
 │   ├── containers/     # feature related containers like auth
-|   |   ├── auth/
-|   │   │   ├── AuthProviders.tsx
-│   |   │   ├── authSagas.ts
-│   │   |   ├── index.ts
-│   │   |   ├── selectors.ts
-│   │   |   └── slice.ts
-|   |   ├── createPlaylist/
-|   │   │   ├── createPlaylist.css
-│   |   │   ├── CreatePlaylistComponent.tsx
-│   |   │   ├── createPlaylistSagas.ts
-│   │   |   └── slice.ts
-|   |   ├── selectPlaylist/
-|   │   │   ├── playlistSelector.css
-│   |   │   ├── PlaylistSelector.tsx
-│   |   │   ├── selectPlaylistSagas.ts
-│   │   |   └── slice.ts
-|   |   ├── editPlaylist/
-│   |   │   ├── editPlaylistSagas.ts
-│   │   |   └── slice.ts
+│   |   ├── auth/
+│   |   │   ├── AuthProviders.tsx
+│   │   │   ├── authSagas.ts
+│   │   │   ├── index.ts
+│   │   │   ├── selectors.ts
+│   │   │   └── slice.ts
+│   |   ├── createPlaylist/
+│   │   │   ├── createPlaylist.css
+│   │   │   ├── CreatePlaylistComponent.tsx
+│   │   │   ├── createPlaylistSagas.ts
+│   │   │   └── slice.ts
+│   |   ├── selectPlaylist/
+│   │   │   ├── playlistSelector.css
+│   │   │   ├── PlaylistSelector.tsx
+│   │   │   ├── selectPlaylistSagas.ts
+│   │   │   └── slice.ts
+│   |   ├── searchTrack/
+│   │   │   ├── SearchBar.tsx
+│   │   │   ├── searchTrackSagas.ts
+│   │   │   ├── searchTrackSlice.ts
+│   │   │   └── searchTrack.css
+│   |   ├── editPlaylist/
+│   │   │   ├── editPlaylistSagas.ts
+│   │   │   └── slice.ts
 │   ├── store/          # redux logic
 │   │   ├── reducers.ts
 │   │   ├── sagas.ts
 │   │   └── store.ts
 │   ├── types/          # Typescript types 
-│   │   └── requests.ts
+│   │   └── spotify.ts
 │   ├── styles/         # Styles
 │   │   ├── App.css
 │   │   └── index.css
@@ -150,8 +155,8 @@ project/
 │   │   └── setupTests.ts
 │   ├── App.tsx
 │   ├── index.tsx
-│   ├── react-app-env.d.ts  #automatic generated, refernces to Types
-│   └── reportWebVitals.ts  #track 
+│   ├── react-app-env.d.ts  # Automatically generated, references to Types
+│   └── reportWebVitals.ts  # Track 
 ├── .env
 ├── package.json
 ├── tsconfig.json
