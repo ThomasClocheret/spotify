@@ -3,6 +3,8 @@
 import React from 'react';
 import './track.css';
 import { DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { useDispatch } from 'react-redux';
+import { removeTrackRequest } from '../../containers/editPlaylist/slice';
 
 interface Artist {
   name: string;
@@ -15,7 +17,9 @@ interface Album {
 }
 
 interface TrackData {
+  id: string;
   name?: string;
+  uri: string;
   artists?: Artist[];
   album?: Album;
 }
@@ -26,13 +30,29 @@ interface TrackProps {
   isDragging: boolean;
   provided: DraggableProvided;
   snapshot: DraggableStateSnapshot;
+  playlistId: string;
 }
 
-const Track: React.FC<TrackProps> = ({ track, isDragging, provided, snapshot }) => {
+const Track: React.FC<TrackProps> = ({
+  track,
+  isDragging,
+  provided,
+  snapshot,
+  playlistId,
+}) => {
+  const dispatch = useDispatch();
   const { name = 'Unknown Track', artists = [], album } = track;
-  const albumImageUrl = album?.images?.[0]?.url || 'https://via.placeholder.com/50';
+  const albumImageUrl =
+    album?.images?.[0]?.url || 'https://via.placeholder.com/50';
   const albumName = album?.name || 'Unknown Album';
   const releaseDate = album?.release_date || 'Unknown Release Date';
+
+  const handleRemoveClick = (
+    e: React.MouseEvent<HTMLParagraphElement>
+  ) => {
+    e.stopPropagation();
+    dispatch(removeTrackRequest({ playlistId, trackUri: track.uri }));
+  };
 
   return (
     <div
@@ -66,6 +86,9 @@ const Track: React.FC<TrackProps> = ({ track, isDragging, provided, snapshot }) 
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0-5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 10a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"></path>
           </svg>
+          <div className="track-action-dropdown">
+            <p onClick={handleRemoveClick}>Remove</p>
+          </div>
         </div>
       </div>
     </div>

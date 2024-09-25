@@ -1,6 +1,11 @@
-import { call, put, select, takeEvery } from "redux-saga/effects";
+// src/containers/selectPlaylist/selectPlaylistSagas.ts
+
 import axios from "axios";
-import { fetchPlaylists, fetchPlaylistsSuccess, fetchPlaylistsFailure, fetchPlaylistTracksSuccess, fetchPlaylistTracksFailure, selectPlaylist } from "./slice";
+import { call, put, select, takeEvery } from "redux-saga/effects";
+
+import { fetchPlaylists, fetchPlaylistsSuccess, fetchPlaylistsFailure, selectPlaylist, fetchPlaylistTracks, fetchPlaylistTracksSuccess, fetchPlaylistTracksFailure } from "./slice";
+import { displayAlert } from '../../appSlice';
+import { RootState } from "../../store/store";
 import { authSelectors } from "../auth/selectors";
 
 function* fetchPlaylistsSaga(): Generator<any, void, any> {
@@ -23,19 +28,26 @@ function* fetchPlaylistsSaga(): Generator<any, void, any> {
         );
 
         yield put(fetchPlaylistsSuccess(response.data.items));
-    } catch (error) {
+
+        // Automatically select the first playlist if none is selected
+        const state: RootState = yield select();
+        if (!state.selectPlaylist.selectedPlaylist && response.data.items.length > 0) {
+            yield put(selectPlaylist(response.data.items[0].id));
+        }
+    } catch (error: any) {
         console.error('Failed to fetch playlists:', error);
         yield put(fetchPlaylistsFailure());
+        yield put(displayAlert({ message: 'Failed to fetch playlists.', type: 'error' }));
     }
 }
 
-function* fetchPlaylistTracksSaga(action: { payload: string }): Generator<any, void, any> {
+function* fetchPlaylistTracksSaga(action: ReturnType<typeof selectPlaylist>): Generator<any, void, any> {
     try {
-        const accessToken = yield select(authSelectors.getAccessToken);
+        const accessToken: string = yield select(authSelectors.getAccessToken);
         const playlistId = action.payload;
 
-        if (!accessToken || !playlistId) {
-            throw new Error('No access token or playlist ID found.');
+        if (!accessToken) {
+            throw new Error('No access token available');
         }
 
         const response = yield call(() =>
@@ -44,17 +56,16 @@ function* fetchPlaylistTracksSaga(action: { payload: string }): Generator<any, v
             })
         );
 
-        console.log('Fetched playlist tracks:', response.data.items);
-
         yield put(fetchPlaylistTracksSuccess(response.data.items));
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to fetch playlist tracks:', error);
         yield put(fetchPlaylistTracksFailure());
+        yield put(displayAlert({ message: 'Failed to fetch playlist tracks.', type: 'error' }));
     }
 }
 
-
 export default function* playlistSaga() {
     yield takeEvery(fetchPlaylists.type, fetchPlaylistsSaga);
-    yield takeEvery(selectPlaylist, fetchPlaylistTracksSaga);
+    yield takeEvery(selectPlaylist.type, fetchPlaylistTracksSaga);
+    yield takeEvery(fetchPlaylistTracks.type, fetchPlaylistTracksSaga);
 }

@@ -1,3 +1,5 @@
+// src/containers/selectPlaylist/PlaylistSelector.tsx
+
 import "./playlistSelector.css";
 
 import React, { useEffect, useState } from "react";
@@ -12,6 +14,8 @@ const PlaylistSelector: React.FC = () => {
     const playlists = useSelector((state: RootState) => state.selectPlaylist.playlists as Playlist[]);
     const selectedPlaylist = useSelector((state: RootState) => state.selectPlaylist.selectedPlaylist);
     const selectedPlaylistObj = playlists.find(p => p.id === selectedPlaylist);
+    const loading = useSelector((state: RootState) => state.selectPlaylist.loading);
+    const error = useSelector((state: RootState) => state.selectPlaylist.error);
 
     // Get accessToken and userId from the auth state
     const accessToken = useSelector(authSelectors.getAccessToken);
@@ -61,7 +65,11 @@ const PlaylistSelector: React.FC = () => {
             {dropdownVisible && (
                 <div className="playlist-dropdown" onClick={(e) => e.stopPropagation()}>
                     <div className="playlist-list">
-                        {playlists.length > 0 ? (
+                        {loading ? (
+                            <p className="playlist-loading">Loading playlists...</p>
+                        ) : error ? (
+                            <p className="playlist-error">Error: {error}</p>
+                        ) : playlists.length > 0 ? (
                             playlists.map((playlist) => (
                                 <div
                                     key={playlist.id}
@@ -76,7 +84,7 @@ const PlaylistSelector: React.FC = () => {
                                 </div>
                             ))
                         ) : (
-                            <p className="playlist-error">No playlists available</p>
+                            <p className="playlist-no">No playlists available</p>
                         )}
                     </div>
                 </div>

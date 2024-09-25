@@ -1,11 +1,20 @@
-import './styles/App.css';
+// src/App.tsx
+
+import "./styles/App.css";
 
 import React, { FC, ReactElement, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from '../src/store/store';
+import { RootState } from './store/store';
 
+import {
+  showCreatePlaylist,
+  showEditPlaylist,
+  hideCreatePlaylist,
+  hideEditPlaylist,
+  hideAlert,
+} from './appSlice';
 import { authSelectors } from "./containers/auth/selectors";
-import { toggleCreatePlaylist, toggleEditPlaylist, displayAlert, hideAlert } from './appSlice';
+import { fetchPlaylists } from './containers/selectPlaylist/slice';
 import { logOut } from './containers/auth/slice';
 import { Playlist } from "./types/spotify";
 
@@ -24,29 +33,40 @@ const App: FC = (): ReactElement => {
   const dispatch = useDispatch();
   const user = useSelector(authSelectors.getUser);
 
-  const showCreatePlaylist = useSelector((state: RootState) => state.appSlice.showCreatePlaylist);
-  const showEditPlaylist = useSelector((state: RootState) => state.appSlice.showEditPlaylist);
-  const showAlert = useSelector((state: RootState) => state.appSlice.showAlert);
-  const alertMessage = useSelector((state: RootState) => state.appSlice.alertMessage);
+  // Renamed state variables to avoid naming conflict
+  const isCreatePlaylistVisible = useSelector(
+    (state: RootState) => state.appSlice.showCreatePlaylist
+  );
+  const isEditPlaylistVisible = useSelector(
+    (state: RootState) => state.appSlice.showEditPlaylist
+  );
+  const showAlert = useSelector(
+    (state: RootState) => state.appSlice.showAlert
+  );
+  const alertMessage = useSelector(
+    (state: RootState) => state.appSlice.alertMessage
+  );
+  const alertType = useSelector(
+    (state: RootState) => state.appSlice.alertType
+  );
 
   // Tracks from the selected playlist
-  const selectedPlaylist = useSelector((state: RootState) => state.selectPlaylist.selectedPlaylist);
-  const playlists = useSelector((state: RootState) => state.selectPlaylist.playlists as Playlist[]);
-  const tracks = useSelector((state: RootState) => state.selectPlaylist.tracks as PlaylistTrack[]);
-  
+  const selectedPlaylist = useSelector(
+    (state: RootState) => state.selectPlaylist.selectedPlaylist
+  );
+  const playlists = useSelector(
+    (state: RootState) => state.selectPlaylist.playlists as Playlist[]
+  );
+  const tracks = useSelector(
+    (state: RootState) => state.selectPlaylist.tracks as PlaylistTrack[]
+  );
+
   // Find the currently selected playlist
-  const selectedPlaylistObj = playlists.find(p => p.id === selectedPlaylist);
+  const selectedPlaylistObj = playlists.find(
+    (p) => p.id === selectedPlaylist
+  );
   const playlistDescription = selectedPlaylistObj?.description || "";
-
-  // Access error from Redux state
-  const playlistError = useSelector((state: RootState) => state.createPlaylist.error);
-
-  useEffect(() => {
-    if (playlistError) {
-      dispatch(displayAlert(playlistError));
-    }
-  }, [playlistError, dispatch]);
-
+  
   const handleAlertClose = () => {
     dispatch(hideAlert());
   };
@@ -58,18 +78,27 @@ const App: FC = (): ReactElement => {
 
   return (
     <>
-      <div className='header-container'>
-        <div className='search'>
+      <div className="header-container">
+        <div className="search">
           <SearchBar />
-          <Button label="Search" onClick={() => console.log("Search clicked")} />
+          <Button
+            label="Search"
+            onClick={() => console.log("Search clicked")}
+          />
         </div>
-        <div className='header-container-right'>
-          <Button label="Add new playlist" onClick={() => dispatch(toggleCreatePlaylist())} />
-          <div className='account'>
+        <div className="header-container-right">
+          <Button
+            label="Add new playlist"
+            onClick={() => dispatch(showCreatePlaylist())}
+          />
+          <div className="account">
             <div className="account-profile">
-              <img src={user?.userImage || "https://via.placeholder.com/33"} alt="profile" />
+              <img
+                src={user?.userImage || "https://via.placeholder.com/33"}
+                alt="profile"
+              />
             </div>
-            <div className='drop-down'>
+            <div className="drop-down">
               <p>Account: {user?.userName || "Profile"}</p>
               <p onClick={handleLogOut}>Log out</p>
             </div>
@@ -77,42 +106,51 @@ const App: FC = (): ReactElement => {
         </div>
       </div>
 
-      <div className='content-container'>
+      <div className="content-container">
         <div className="playlist-select">
           <div className="playlist-select-left">
             <PlaylistSelector />
-            <Button label="Edit playlist" onClick={() => dispatch(toggleEditPlaylist())} />
+            <Button
+              label="Edit playlist"
+              onClick={() => dispatch(showEditPlaylist())}
+            />
             {playlistDescription && <p>{playlistDescription}</p>}
+          </div>
+          <div className="filter-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 4h18v2H3V4zm3 7h12v2H6v-2zm4 5h4v2h-4v-2z"></path>
+            </svg>
           </div>
         </div>
 
         <div className="track-list">
-          <TrackList
-            tracks={tracks}
-            playlistId={selectedPlaylist!}
-          />
+          <TrackList tracks={tracks} playlistId={selectedPlaylist!} />
         </div>
       </div>
 
-      {showCreatePlaylist && (
-        <CreatePlaylist 
-          key={Math.random()} 
-          onCancel={() => dispatch(toggleCreatePlaylist())} 
+      {isCreatePlaylistVisible && (
+        <CreatePlaylist
+          onCancel={() => dispatch(hideCreatePlaylist())}
         />
       )}
 
-      {showEditPlaylist && selectedPlaylistObj && (
+      {isEditPlaylistVisible && selectedPlaylistObj && (
         <EditPlaylist
-          key={Math.random()}
           playlistId={selectedPlaylistObj.id}
           initialName={selectedPlaylistObj.name}
           initialDescription={playlistDescription}
           initialPublic={true}
-          onCancel={() => dispatch(toggleEditPlaylist())}
+          onCancel={() => dispatch(hideEditPlaylist())}
         />
       )}
 
-      {showAlert && (<Alert message={alertMessage} onClose={handleAlertClose} />)}
+      {showAlert && (
+        <Alert
+          message={alertMessage}
+          type={alertType}
+          onClose={handleAlertClose}
+        />
+      )}
     </>
   );
 };

@@ -1,9 +1,15 @@
-// src/containers/editPlaylist/EditPlaylistComponent.tsx
+// src/containers/editPlaylist/EditPlaylist.tsx
+
 import React, { FC, ReactElement, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { RootState } from '../../store/store';
-import { updatePlaylistRequest } from './slice';
-import PlaylistDetailsPanel from '../../components/playlistDetail/playlistDetail';
+import { displayAlert, hideAlert } from '../../appSlice';
+import { updatePlaylistRequest, resetEditPlaylistState } from './slice';
+import { fetchPlaylists, fetchPlaylistTracks } from '../selectPlaylist/slice';
+
+import PlaylistDetailsPanel from '../../components/playlistDetail/PlaylistDetail';
+import { RequestStatus } from '../../types/requests';
 
 interface EditPlaylistProps {
   playlistId: string;
@@ -25,9 +31,37 @@ const EditPlaylist: FC<EditPlaylistProps> = ({
   const [isPublic, setIsPublic] = useState(initialPublic);
 
   const dispatch = useDispatch();
-  const status = useSelector((state: RootState) => state.editPlaylist.isLoading);
+  const isLoading = useSelector((state: RootState) => state.editPlaylist.isLoading);
+  const success = useSelector((state: RootState) => state.editPlaylist.success);
+  const error = useSelector((state: RootState) => state.editPlaylist.error);
+
+  useEffect(() => {
+    if (success) {
+      // Reset the state
+      dispatch(resetEditPlaylistState());
+      // Close the panel
+      onCancel();
+      // Show success alert
+      dispatch(displayAlert({ message: 'Playlist updated successfully!', type: 'success' }));
+      // Refresh playlists and tracks
+      dispatch(fetchPlaylists());
+      dispatch(fetchPlaylistTracks(playlistId));
+    } else if (error) {
+      if (error.includes('403')) { // Assuming error message contains status code
+        dispatch(displayAlert({ message: 'You should be the owner of the playlist to edit it.', type: 'error' }));
+      } else {
+        dispatch(displayAlert({ message: 'Failed to update playlist.', type: 'error' }));
+      }
+      // Reset the state
+      dispatch(resetEditPlaylistState());
+    }
+  }, [success, error, dispatch, onCancel, playlistId]);
 
   const handleUpdate = () => {
+    if (!name.trim()) {
+      dispatch(displayAlert({ message: 'Playlist name cannot be empty.', type: 'error' }));
+      return;
+    }
     dispatch(
       updatePlaylistRequest({
         playlistId,
@@ -40,7 +74,7 @@ const EditPlaylist: FC<EditPlaylistProps> = ({
 
   return (
     <PlaylistDetailsPanel
-      title="Update playlist"
+      title="Update Playlist"
       name={name}
       description={description}
       isPublic={isPublic}
@@ -48,8 +82,11 @@ const EditPlaylist: FC<EditPlaylistProps> = ({
       setDescription={setDescription}
       setIsPublic={setIsPublic}
       handleSave={handleUpdate}
-      isSaving={status === true}
-      onCancel={onCancel}
+      isSaving={isLoading}
+      onCancel={() => {
+        dispatch(resetEditPlaylistState());
+        onCancel();
+      }}
     />
   );
 };

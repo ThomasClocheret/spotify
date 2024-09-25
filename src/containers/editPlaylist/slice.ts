@@ -1,3 +1,5 @@
+// src/containers/editPlaylist/slice.ts
+
 import { createSlice, PayloadAction, createAction } from '@reduxjs/toolkit';
 
 interface EditPlaylistState {
@@ -14,6 +16,7 @@ const initialState: EditPlaylistState = {
   snapshotId: null,
 };
 
+// Define action creators
 export const updatePlaylistRequest = createAction<{
   playlistId: string;
   name: string;
@@ -76,11 +79,29 @@ const editPlaylistSlice = createSlice({
     },
     removeTrackSuccess: (state) => {
       state.isLoading = false;
+      state.success = true;
     },
     removeTrackFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       state.error = action.payload;
     },
+    resetEditPlaylistState: (state) => {
+      state.isLoading = false;
+      state.success = false;
+      state.error = null;
+      state.snapshotId = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(updatePlaylistSuccess, (state) => {
+        state.isLoading = false;
+        state.success = true;
+      })
+      .addCase(updatePlaylistFailure, (state, action: PayloadAction<string>) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
   },
 });
 
@@ -94,6 +115,7 @@ export const {
   removeTrackRequest,
   removeTrackSuccess,
   removeTrackFailure,
+  resetEditPlaylistState,
 } = editPlaylistSlice.actions;
 
 export default editPlaylistSlice.reducer;

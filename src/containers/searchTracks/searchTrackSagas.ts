@@ -1,9 +1,10 @@
-import { call, put, debounce, select } from "redux-saga/effects";
 import axios from "axios";
+import { call, put, debounce, select } from "redux-saga/effects";
+import { SagaIterator } from "redux-saga";
+
 import { searchTracks, searchTracksSuccess, searchTracksFailure, setSearchTerm } from "./slice";
 import { RootState } from "../../store/store";
 import { TrackObject } from "../../types/spotify";
-import { SagaIterator } from "redux-saga";
 
 const getSearchTerm = (state: RootState) => state.searchTrack.searchTerm;
 

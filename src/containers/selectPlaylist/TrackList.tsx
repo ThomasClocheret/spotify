@@ -1,16 +1,15 @@
-// src/components/TrackList.tsx
+// src/containers/selectPlaylist/TrackList.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Track from '../../components/track/Track';
+
+
 import { reorderTracksRequest } from '../editPlaylist/slice';
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { RootState } from "../../store/store";
+
+// Components
+import Track from '../../components/track/Track';
 
 interface TrackListProps {
   tracks: any[];
@@ -74,7 +73,7 @@ const TrackList: React.FC<TrackListProps> = ({
         playlistId,
         rangeStart: source.index,
         insertBefore: destination.index,
-        snapshotId, // Can be null initially
+        snapshotId,
       })
     );
   };
@@ -90,8 +89,8 @@ const TrackList: React.FC<TrackListProps> = ({
           >
             {tracks.map((item, index) => (
               <Draggable
-                key={item.track.id} // Use only the unique track ID
-                draggableId={item.track.id.toString()} // Ensure it's a string
+                key={item.track.id}
+                draggableId={item.track.id.toString()} 
                 index={index}
               >
                 {(provided, snapshot) => (
@@ -101,11 +100,13 @@ const TrackList: React.FC<TrackListProps> = ({
                     isDragging={snapshot.isDragging}
                     provided={provided}
                     snapshot={snapshot}
+                    playlistId={playlistId}
                   />
                 )}
               </Draggable>
             ))}
             {provided.placeholder}
+            {isLoading && <p>Saving changes...</p>}
           </div>
         )}
       </Droppable>

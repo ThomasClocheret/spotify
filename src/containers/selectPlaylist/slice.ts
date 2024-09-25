@@ -1,4 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+// src/containers/selectPlaylist/slice.ts
+
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Playlist, PlaylistTrack } from "../../types/spotify";
 
 interface PlaylistState {
@@ -7,6 +9,7 @@ interface PlaylistState {
   tracks: Array<PlaylistTrack>;
   loading: boolean;
   snapshotId: string | null;
+  error: string | null;
 }
 
 const initialState: PlaylistState = {
@@ -15,6 +18,7 @@ const initialState: PlaylistState = {
   tracks: [],
   loading: false,
   snapshotId: null,
+  error: null,
 };
 
 const playlistSlice = createSlice({
@@ -24,22 +28,21 @@ const playlistSlice = createSlice({
     fetchPlaylists: (state) => {
       state.loading = true;
     },
-    fetchPlaylistsSuccess: (state, action) => {
+    fetchPlaylistsSuccess: (state, action: PayloadAction<Playlist[]>) => {
       state.playlists = action.payload;
       state.loading = false;
     },
     fetchPlaylistsFailure: (state) => {
       state.loading = false;
     },
-    selectPlaylist: (state, action) => {
+    selectPlaylist: (state, action: PayloadAction<string>) => {
       state.selectedPlaylist = action.payload;
     },
-    fetchPlaylistTracks: (state) => {
+    fetchPlaylistTracks: (state, action: PayloadAction<string>) => {
       state.loading = true;
     },
-    fetchPlaylistTracksSuccess: (state, action) => {
+    fetchPlaylistTracksSuccess: (state, action: PayloadAction<PlaylistTrack[]>) => {
       state.tracks = action.payload;
-      state.snapshotId = action.payload.snapshot_id;
       state.loading = false;
     },
     fetchPlaylistTracksFailure: (state) => {

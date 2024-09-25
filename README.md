@@ -113,9 +113,18 @@ project/
 │   └── site.webmanifest
 ├── src/
 │   ├── components/     # components
+|   |   ├── alert/
+|   │   │   ├── alert.css
+│   │   |   └── Alert.tsx
 |   |   ├── button/
 |   │   │   ├── button.css
-│   │   └   └── Button.tsx
+│   │   |   └── Button.tsx
+|   |   ├── playlistDetail/
+|   │   │   ├── playlistDetail.css
+│   │   |   └── PlaylistDetail.tsx
+|   |   ├── track/
+|   │   │   ├── track.css
+│   │   └   └── Track.tsx
 │   ├── containers/     # feature related containers like auth
 │   |   ├── auth/
 │   |   │   ├── AuthProviders.tsx
@@ -124,8 +133,7 @@ project/
 │   │   │   ├── selectors.ts
 │   │   │   └── slice.ts
 │   |   ├── createPlaylist/
-│   │   │   ├── createPlaylist.css
-│   │   │   ├── CreatePlaylistComponent.tsx
+│   │   │   ├── CreatePlaylist.tsx
 │   │   │   ├── createPlaylistSagas.ts
 │   │   │   └── slice.ts
 │   |   ├── selectPlaylist/
@@ -139,6 +147,7 @@ project/
 │   │   │   ├── searchTrackSlice.ts
 │   │   │   └── searchTrack.css
 │   |   ├── editPlaylist/
+│   │   │   ├── EditPlaylist.tsx
 │   │   │   ├── editPlaylistSagas.ts
 │   │   │   └── slice.ts
 │   ├── store/          # redux logic
@@ -146,6 +155,7 @@ project/
 │   │   ├── sagas.ts
 │   │   └── store.ts
 │   ├── types/          # Typescript types 
+│   │   ├── requests.ts
 │   │   └── spotify.ts
 │   ├── styles/         # Styles
 │   │   ├── App.css
