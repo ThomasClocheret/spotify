@@ -160,8 +160,6 @@ project/
 │   │   ├── App.css
 │   │   └── index.css
 │   ├── tests/          # Tests
-│   │   ├── App.test.tsx
-│   │   └── setupTests.ts
 │   ├── App.tsx
 │   ├── index.tsx
 │   ├── react-app-env.d.ts  # Automatically generated, references to Types

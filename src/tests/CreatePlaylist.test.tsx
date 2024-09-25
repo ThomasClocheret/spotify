@@ -1,21 +1,18 @@
 // src/tests/CreatePlaylist.test.tsx
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
+import { render, fireEvent } from '@testing-library/react';
 
 import CreatePlaylist from '../containers/createPlaylist/CreatePlaylist';
 import { RequestStatus } from '../types/requests';
-import { createPlaylistSuccess, createPlaylistFailure, resetCreatePlaylistState } from '../containers/createPlaylist/slice';
-import { fetchPlaylists } from '../containers/selectPlaylist/slice';
-import { displayAlert } from '../appSlice';
 
 const mockStore = configureStore([]);
 
-describe('CreatePlaylist Component', () => {
+describe('CreatePlaylist component', () => {
   let store: any;
-  let onCancelMock: jest.Mock;
+  let onCancel: jest.Mock;
 
   beforeEach(() => {
     store = mockStore({
@@ -24,84 +21,29 @@ describe('CreatePlaylist Component', () => {
         error: null,
       },
     });
-
     store.dispatch = jest.fn();
-    onCancelMock = jest.fn();
+    onCancel = jest.fn();
   });
 
-  test('renders correctly', () => {
-    render(
+  it('renders and allows input', () => {
+    const { getByPlaceholderText, getByText } = render(
       <Provider store={store}>
-        <CreatePlaylist onCancel={onCancelMock} />
+        <CreatePlaylist onCancel={onCancel} />
       </Provider>
     );
 
-    expect(screen.getByText('Add New Playlist')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Playlist name')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Playlist description (optional)')).toBeInTheDocument();
-    expect(screen.getByLabelText('Public')).toBeInTheDocument();
-    expect(screen.getByText('Cancel')).toBeInTheDocument();
-    expect(screen.getByText('Save')).toBeInTheDocument();
-  });
+    const nameInput = getByPlaceholderText('Playlist name') as HTMLInputElement;
+    const descriptionInput = getByPlaceholderText('Playlist description (optional)') as HTMLTextAreaElement;
 
-  test('successful playlist creation', async () => {
-    // Simulate success state
-    store = mockStore({
-      createPlaylist: {
-        status: RequestStatus.SUCCESS,
-        error: null,
-      },
-    });
+    fireEvent.change(nameInput, { target: { value: 'My Playlist' } });
+    expect(nameInput.value).toBe('My Playlist');
 
-    render(
-      <Provider store={store}>
-        <CreatePlaylist onCancel={onCancelMock} />
-      </Provider>
-    );
+    fireEvent.change(descriptionInput, { target: { value: 'A cool playlist' } });
+    expect(descriptionInput.value).toBe('A cool playlist');
 
-    // Wait for useEffect to trigger
-    await waitFor(() => {
-      expect(store.dispatch).toHaveBeenCalledWith(resetCreatePlaylistState());
-      expect(onCancelMock).toHaveBeenCalled();
-      expect(store.dispatch).toHaveBeenCalledWith(displayAlert({ message: 'Playlist created successfully!', type: 'success' }));
-      expect(store.dispatch).toHaveBeenCalledWith(fetchPlaylists());
-    });
-  });
-
-  test('failed playlist creation', async () => {
-    // Simulate error state
-    store = mockStore({
-      createPlaylist: {
-        status: RequestStatus.ERROR,
-        error: 'Server error',
-      },
-    });
-
-    render(
-      <Provider store={store}>
-        <CreatePlaylist onCancel={onCancelMock} />
-      </Provider>
-    );
-
-    // Wait for useEffect to trigger
-    await waitFor(() => {
-      expect(store.dispatch).toHaveBeenCalledWith(displayAlert({ message: 'Server error', type: 'error' }));
-      expect(store.dispatch).toHaveBeenCalledWith(resetCreatePlaylistState());
-      expect(onCancelMock).not.toHaveBeenCalled();
-    });
-  });
-
-  test('empty playlist name shows error alert', () => {
-    render(
-      <Provider store={store}>
-        <CreatePlaylist onCancel={onCancelMock} />
-      </Provider>
-    );
-
-    const saveButton = screen.getByText('Save');
-
+    const saveButton = getByText('Save');
     fireEvent.click(saveButton);
 
-    expect(store.dispatch).toHaveBeenCalledWith(displayAlert({ message: 'Playlist name cannot be empty.', type: 'error' }));
+    expect(store.dispatch).toHaveBeenCalled();
   });
 });

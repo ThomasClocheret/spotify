@@ -54,16 +54,10 @@ const App: FC = (): ReactElement => {
       <div className="header-container">
         <div className="search">
           <SearchBar />
-          <Button
-            label="Search"
-            onClick={() => console.log("Search clicked")}
-          />
+          <Button label="Search" onClick={() => console.log("Search clicked")}/>
         </div>
         <div className="header-container-right">
-          <Button
-            label="Add new playlist"
-            onClick={() => dispatch(showCreatePlaylist())}
-          />
+          <Button label="Add new playlist" onClick={() => dispatch(showCreatePlaylist())}/>
           <div className="account">
             <div className="account-profile">
               <img
@@ -83,10 +77,7 @@ const App: FC = (): ReactElement => {
         <div className="playlist-select">
           <div className="playlist-select-left">
             <PlaylistSelector />
-            <Button
-              label="Edit playlist"
-              onClick={() => dispatch(showEditPlaylist())}
-            />
+            <Button label="Edit playlist" onClick={() => dispatch(showEditPlaylist())}/>
             {playlistDescription && <p>{playlistDescription}</p>}
           </div>
           <div className="filter-icon">

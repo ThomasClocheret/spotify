@@ -35,7 +35,6 @@ function* fetchPlaylistsSaga(): Generator<any, void, any> {
             yield put(selectPlaylist(response.data.items[0].id));
         }
     } catch (error: any) {
-        console.error('Failed to fetch playlists:', error);
         yield put(fetchPlaylistsFailure());
         yield put(displayAlert({ message: 'Failed to fetch playlists.', type: 'error' }));
     }
@@ -58,7 +57,6 @@ function* fetchPlaylistTracksSaga(action: ReturnType<typeof selectPlaylist>): Ge
 
         yield put(fetchPlaylistTracksSuccess(response.data.items));
     } catch (error: any) {
-        console.error('Failed to fetch playlist tracks:', error);
         yield put(fetchPlaylistTracksFailure());
         yield put(displayAlert({ message: 'Failed to fetch playlist tracks.', type: 'error' }));
     }

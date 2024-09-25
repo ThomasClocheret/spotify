@@ -13,7 +13,6 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  // Removed React.StrictMode
   <Provider store={store}>
     <AuthProvider>
       <App />

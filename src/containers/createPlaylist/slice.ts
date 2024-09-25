@@ -19,7 +19,7 @@ const initialState: PlaylistState = {
 export const createPlaylistRequest = createAction<{ name: string; description?: string; public?: boolean }>('playlist/createPlaylistRequest');
 export const createPlaylistSuccess = createAction<Playlist>('playlist/createPlaylistSuccess');
 export const createPlaylistFailure = createAction<string>('playlist/createPlaylistFailure');
-export const resetCreatePlaylistState = createAction('playlist/resetCreatePlaylistState'); // Added reset action
+export const resetCreatePlaylistState = createAction('playlist/resetCreatePlaylistState');
 
 const createPlaylistSlice = createSlice({
   name: 'createPlaylist',

@@ -57,15 +57,11 @@ function* reorderTracksSaga(
       })
     );
 
-    console.log('Fetched playlist data:', playlistResponse.data);
-
     const currentSnapshotId: string = playlistResponse.data.snapshot_id;
 
     if (!currentSnapshotId) {
       throw new Error('Failed to retrieve snapshot_id from playlist data.');
     }
-
-    console.log('Current snapshot_id:', currentSnapshotId);
 
     // Step 2: Construct the request body with the latest snapshot_id
     const requestBody: any = {
@@ -74,8 +70,6 @@ function* reorderTracksSaga(
       range_length: 1,
       snapshot_id: currentSnapshotId,
     };
-
-    console.log('Reordering tracks request:', JSON.stringify(requestBody, null, 2));
 
     // Step 3: Make the PUT request to reorder tracks
     const response = yield call(() =>
@@ -96,17 +90,11 @@ function* reorderTracksSaga(
     // Step 4: Dispatch success action with the new snapshot_id
     yield put(reorderTracksSuccess({ newSnapshotId }));
     yield put(displayAlert({ message: 'Tracks reordered successfully!', type: 'success' }));
-    console.log('Tracks reordered successfully:', response.data);
 
   } catch (error: any) {
-    console.error('Error reordering tracks:', error);
 
     let errorMessage = 'Failed to reorder tracks';
     if (error.response) {
-      console.error('Response data:', JSON.stringify(error.response.data, null, 2));
-      console.error('Response status:', error.response.status);
-      console.error('Response headers:', error.response.headers);
-
       if (error.response.status === 403) {
         errorMessage = 'You must be the owner of the playlist to reorder tracks.';
       } else {
@@ -143,7 +131,6 @@ function* addTrackSaga(action: PayloadAction<AddTrackPayload>): Generator<any, v
     yield put(displayAlert({ message: 'Track added successfully!', type: 'success' }));
     yield put(fetchPlaylistTracks(playlistId));
   } catch (error: any) {
-    console.error('Error adding track:', error);
     let errorMessage = 'Failed to add track';
     if (error.response && error.response.status === 403) {
       errorMessage = 'You should be the owner of the playlist to add a track.';
@@ -178,7 +165,6 @@ function* removeTrackSaga(action: PayloadAction<AddTrackPayload>): Generator<any
 
     yield put(removeTrackSuccess());
     yield put(displayAlert({ message: 'Track removed successfully!', type: 'success' }));
-    console.log('Track removed successfully:', response.data);
 
     // Refresh the playlist tracks
     yield put(fetchPlaylistTracks(playlistId));
@@ -216,7 +202,6 @@ function* updatePlaylistSaga(action: PayloadAction<UpdatePlaylistPayload>): Gene
 
     yield put(updatePlaylistSuccess());
     yield put(displayAlert({ message: 'Playlist updated successfully!', type: 'success' }));
-    console.log('Playlist updated successfully:', response.data);
 
     // Refresh playlists and tracks
     yield put(fetchPlaylists());

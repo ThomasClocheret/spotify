@@ -35,7 +35,6 @@ function* performSearch(): SagaIterator {
     const tracks: TrackObject[] = response.data.tracks.items;
     yield put(searchTracksSuccess(tracks));
   } catch (error: any) {
-    console.error("Search failed:", error);
     yield put(searchTracksFailure(error.message || "Search failed"));
   }
 }
