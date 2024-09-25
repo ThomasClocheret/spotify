@@ -7,10 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setSearchTerm, clearSearchResults } from "./slice";
 import { addTrackRequest, removeTrackRequest } from '../editPlaylist/slice';
+import { fetchPlaylistTracks } from '../selectPlaylist/slice';
 import { displayAlert } from '../../appSlice';
 import { TrackObject, PlaylistTrack } from '../../types/spotify';
 import { RootState } from "../../store/store";
-import { fetchPlaylistTracks } from '../selectPlaylist/slice';
 
 const SearchBar: React.FC = () => {
     const dispatch = useDispatch();
@@ -179,8 +179,8 @@ const SearchBar: React.FC = () => {
                                                 }
                                             }}
                                         >
-                                            {/* Plus Icon */}
                                             {!isAdded ? (
+                                                //Plus Icon
                                                 <svg
                                                     className="plus-icon"
                                                     data-encore-id="icon"

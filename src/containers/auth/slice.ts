@@ -1,5 +1,4 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 import { ErrorPayload, RequestStatus } from "../../types/requests";
 
 const SPOTIFY_SCOPE = [
@@ -56,7 +55,8 @@ const authSlice = createSlice({
     },
     logOut(state) {
       const { REACT_APP_BASE_URL } = process.env;
-      // Remove cookies
+      
+      // Remove cookies /// Check same site cookie policy to fix ///
       const deleteCookie = (cookieName: string, domain: string, path: string = '/') => {
         document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}; domain=${domain};`;
       };

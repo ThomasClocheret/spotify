@@ -4,12 +4,11 @@ import React, { FC, ReactElement, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../../store/store';
-import { displayAlert, hideAlert } from '../../appSlice';
+import { displayAlert } from '../../appSlice';
 import { updatePlaylistRequest, resetEditPlaylistState } from './slice';
 import { fetchPlaylists, fetchPlaylistTracks } from '../selectPlaylist/slice';
 
 import PlaylistDetailsPanel from '../../components/playlistDetail/PlaylistDetail';
-import { RequestStatus } from '../../types/requests';
 
 interface EditPlaylistProps {
   playlistId: string;
@@ -47,7 +46,7 @@ const EditPlaylist: FC<EditPlaylistProps> = ({
       dispatch(fetchPlaylists());
       dispatch(fetchPlaylistTracks(playlistId));
     } else if (error) {
-      if (error.includes('403')) { // Assuming error message contains status code
+      if (error.includes('403')) {
         dispatch(displayAlert({ message: 'You should be the owner of the playlist to edit it.', type: 'error' }));
       } else {
         dispatch(displayAlert({ message: 'Failed to update playlist.', type: 'error' }));

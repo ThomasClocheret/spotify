@@ -40,11 +40,7 @@ const CreatePlaylist: FC<CreatePlaylistProps> = ({ onCancel }): ReactElement => 
       // Refresh playlists
       dispatch(fetchPlaylists());
     } else if (status === RequestStatus.ERROR && error) {
-      // Show error alert
       dispatch(displayAlert({ message: error, type: 'error' }));
-      // Keep the input fields intact
-      // No action needed
-      // Optionally, reset the error state
       dispatch(resetCreatePlaylistState());
     }
   }, [status, error, dispatch, onCancel]);

@@ -1,7 +1,7 @@
 // src/components/track/Track.tsx
+import './track.css';
 
 import React from 'react';
-import './track.css';
 import { DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { useDispatch } from 'react-redux';
 import { removeTrackRequest } from '../../containers/editPlaylist/slice';

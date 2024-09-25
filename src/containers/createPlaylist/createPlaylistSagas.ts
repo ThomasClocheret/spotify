@@ -1,37 +1,13 @@
 // src/containers/createPlaylist/createPlaylistSagas.ts
 
 import axios from "axios";
+import { SagaIterator } from 'redux-saga';
 import { call, put, select, takeEvery } from "redux-saga/effects";
+
 import { createPlaylistRequest, createPlaylistSuccess, createPlaylistFailure } from './slice'; 
 import { authSelectors } from '../auth/selectors'; 
 import { displayAlert } from '../../appSlice';
-import { fetchPlaylists, selectPlaylist } from '../selectPlaylist/slice';
-import { Playlist } from '../../types/spotify';
-import { SagaIterator } from 'redux-saga';
-
-// Define the API function
-const createPlaylistApi = (
-  userId: string,
-  accessToken: string,
-  name: string,
-  description: string,
-  isPublic: boolean
-) => {
-  return axios.post(
-    `https://api.spotify.com/v1/users/${userId}/playlists`,
-    {
-      name,
-      description,
-      public: isPublic,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    }
-  );
-};
+import { selectPlaylist } from '../selectPlaylist/slice';
 
 function* addPlaylist(action: ReturnType<typeof createPlaylistRequest>): SagaIterator {
   try {
@@ -44,7 +20,23 @@ function* addPlaylist(action: ReturnType<typeof createPlaylistRequest>): SagaIte
     if (!accessToken) throw new Error('No access token available');
     if (!userId) throw new Error('No user ID available');
 
-    const response = yield call(() => createPlaylistApi(userId, accessToken, name, description, isPublic));
+    // Inline the API call here
+    const response = yield call(() =>
+      axios.post(
+        `https://api.spotify.com/v1/users/${userId}/playlists`,
+        {
+          name,
+          description,
+          public: isPublic,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+    );
 
     yield put(createPlaylistSuccess(response.data));
 
@@ -54,8 +46,9 @@ function* addPlaylist(action: ReturnType<typeof createPlaylistRequest>): SagaIte
     // Dispatch success alert
     yield put(displayAlert({ message: 'Playlist created successfully!', type: 'success' }));
   } catch (error: any) {
-    yield put(createPlaylistFailure(error.message));
-    yield put(displayAlert({ message: error.message || 'Failed to create playlist.', type: 'error' }));
+    const errorMessage = error.message || 'Failed to create playlist.';
+    yield put(createPlaylistFailure(errorMessage));
+    yield put(displayAlert({ message: errorMessage, type: 'error' }));
   }
 }
 

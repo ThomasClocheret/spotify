@@ -4,6 +4,7 @@ import "./playlistSelector.css";
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import { fetchPlaylists, selectPlaylist } from "./slice";
 import { authSelectors } from "../auth/selectors";
 import { RootState } from "../../store/store";
@@ -42,7 +43,6 @@ const PlaylistSelector: React.FC = () => {
     return (
         <div className="playlist-selector-container" onMouseOver={toggleDropdown} onMouseOut={toggleDropdown}>
             <div className="playlist-selector">
-                {/* Selected Playlist */}
                 {selectedPlaylistObj ? (
                     <>
                         <img

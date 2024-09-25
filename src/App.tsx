@@ -1,20 +1,12 @@
 // src/App.tsx
-
 import "./styles/App.css";
 
-import React, { FC, ReactElement, useEffect } from "react";
+import React, { FC, ReactElement } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from './store/store';
 
-import {
-  showCreatePlaylist,
-  showEditPlaylist,
-  hideCreatePlaylist,
-  hideEditPlaylist,
-  hideAlert,
-} from './appSlice';
+import { showCreatePlaylist, showEditPlaylist, hideCreatePlaylist, hideEditPlaylist, hideAlert } from './appSlice';
 import { authSelectors } from "./containers/auth/selectors";
-import { fetchPlaylists } from './containers/selectPlaylist/slice';
 import { logOut } from './containers/auth/slice';
 import { Playlist } from "./types/spotify";
 
@@ -33,38 +25,19 @@ const App: FC = (): ReactElement => {
   const dispatch = useDispatch();
   const user = useSelector(authSelectors.getUser);
 
-  // Renamed state variables to avoid naming conflict
-  const isCreatePlaylistVisible = useSelector(
-    (state: RootState) => state.appSlice.showCreatePlaylist
-  );
-  const isEditPlaylistVisible = useSelector(
-    (state: RootState) => state.appSlice.showEditPlaylist
-  );
-  const showAlert = useSelector(
-    (state: RootState) => state.appSlice.showAlert
-  );
-  const alertMessage = useSelector(
-    (state: RootState) => state.appSlice.alertMessage
-  );
-  const alertType = useSelector(
-    (state: RootState) => state.appSlice.alertType
-  );
+  const isCreatePlaylistVisible = useSelector((state: RootState) => state.appSlice.showCreatePlaylist);
+  const isEditPlaylistVisible = useSelector((state: RootState) => state.appSlice.showEditPlaylist);
+  const showAlert = useSelector((state: RootState) => state.appSlice.showAlert);
+  const alertMessage = useSelector((state: RootState) => state.appSlice.alertMessage);
+  const alertType = useSelector((state: RootState) => state.appSlice.alertType);
 
   // Tracks from the selected playlist
-  const selectedPlaylist = useSelector(
-    (state: RootState) => state.selectPlaylist.selectedPlaylist
-  );
-  const playlists = useSelector(
-    (state: RootState) => state.selectPlaylist.playlists as Playlist[]
-  );
-  const tracks = useSelector(
-    (state: RootState) => state.selectPlaylist.tracks as PlaylistTrack[]
-  );
+  const selectedPlaylist = useSelector((state: RootState) => state.selectPlaylist.selectedPlaylist);
+  const playlists = useSelector((state: RootState) => state.selectPlaylist.playlists as Playlist[]);
+  const tracks = useSelector((state: RootState) => state.selectPlaylist.tracks as PlaylistTrack[]);
 
   // Find the currently selected playlist
-  const selectedPlaylistObj = playlists.find(
-    (p) => p.id === selectedPlaylist
-  );
+  const selectedPlaylistObj = playlists.find((p) => p.id === selectedPlaylist);
   const playlistDescription = selectedPlaylistObj?.description || "";
   
   const handleAlertClose = () => {
