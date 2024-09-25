@@ -1,6 +1,5 @@
 /* searchTrack.css */
 
-/* Container Styles */
 .search-bar-container {
     position: relative;
 }
@@ -138,7 +137,6 @@
     transform: translateY(-50%) scale(1.1);
 }
 
-/* SVG Common Styles */
 .add-button svg {
     width: 20px;
     height: 20px;
@@ -148,21 +146,18 @@
     left: 0;
 }
 
-/* Plus Icon Specific Styles */
 .plus-icon {
     fill: #656565;
     opacity: 1;
     z-index: 1;
 }
 
-/* Checkmark Icon Specific Styles */
 .check-icon {
-    fill: #1db954; /* Spotify Green */
+    fill: #1db954;
     opacity: 0;
     z-index: 0;
 }
 
-/* Added State Styles */
 .add-button.added .plus-icon {
     opacity: 0;
     transform: scale(0.8);
@@ -175,7 +170,6 @@
     z-index: 1;
 }
 
-/* Hover Effects */
 .add-button:hover .plus-icon {
     fill: #ffffff;
 }
@@ -184,7 +178,6 @@
     fill: #ffffff;
 }
 
-/* Enhanced Animation using Keyframes */
 @keyframes fadeInScale {
     0% {
         opacity: 0;
@@ -215,7 +208,6 @@
     animation: fadeOutScale 0.3s forwards;
 }
 
-/* No Results, Error, Loading Styles */
 .no-results, .search-results .error, .search-results .loading {
     display: flex;
     justify-content: center;
@@ -224,7 +216,6 @@
     color: #656565;
 }
 
-/* Scrollbar Styles */
 .search-results::-webkit-scrollbar {
     width: 10px;
 }

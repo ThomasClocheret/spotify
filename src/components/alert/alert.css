@@ -1,11 +1,10 @@
-/* aleart.css */
+/* src/components/alert/alert.css */
+
 .alert {
     position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%) translateY(-100%);
-    background-color: #f44336;
-    /* Red color */
     color: white;
     padding: 16px;
     border-radius: 4px;
@@ -17,4 +16,12 @@
 .alert.show {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
+}
+
+.alert.success {
+    background-color: #1ed760;
+}
+
+.alert.error {
+    background-color: #f44336;
 }

@@ -9,20 +9,20 @@ To evaluate your programming skills, we would like to share a fun challenge with
 For this particular Spotify version, we want to let our users create new Playlists, and add tracks to them. Every feature listed below is mandatory and should be implemented as part of this challenge.
 
 As a user (currently logged in):✅
-+ I should be able to create a new playlist and specify a name and optionally a description.
-+ I should be able to consult a given playlist's content (every tracks added to it).
-+ I should be able to select an existing playlist and display its content.
-+ I should be able to perform a search for any tracks and consult the search results.
-+ I should be able to add any search results in the currently selected playlist.
-+ I should be able to remove a given track from a playlist.
++ I should be able to create a new playlist and specify a name and optionally a description. ✅
++ I should be able to consult a given playlist's content (every tracks added to it). ✅
++ I should be able to select an existing playlist and display its content. ✅
++ I should be able to perform a search for any tracks and consult the search results. ✅
++ I should be able to add any search results in the currently selected playlist. ✅
++ I should be able to remove a given track from a playlist. ✅
 
 
 ### Nice to have
 
 If you want to play a bit more with it, you can add one or more of the following features:
-+ I should be able to edit a playlist's details.
++ I should be able to edit a playlist's details. ✅
 + I should be able to sort the tracks by name, artist, duration, and so on (every track's field).
-+ Allow the user to reorder tracks within a given playlist.
++ Allow the user to reorder tracks within a given playlist. ✅
 + Display additional track information (bars, beats, sections, segments, … )
 + Allow the user to switch to a Dark mode
 + Want to do even more? Please feel free to surprise us! ;-)
@@ -100,7 +100,6 @@ Green   #1ED760
 White   #FFFFFF
 Black   #121212
 
-
 ### Project Structure
 
 project/
@@ -113,9 +112,18 @@ project/
 │   └── site.webmanifest
 ├── src/
 │   ├── components/     # components
+|   |   ├── alert/
+|   │   │   ├── alert.css
+│   │   |   └── Alert.tsx
 |   |   ├── button/
 |   │   │   ├── button.css
-│   │   └   └── Button.tsx
+│   │   |   └── Button.tsx
+|   |   ├── playlistDetail/
+|   │   │   ├── playlistDetail.css
+│   │   |   └── PlaylistDetail.tsx
+|   |   ├── track/
+|   │   │   ├── track.css
+│   │   └   └── Track.tsx
 │   ├── containers/     # feature related containers like auth
 │   |   ├── auth/
 │   |   │   ├── AuthProviders.tsx
@@ -124,8 +132,7 @@ project/
 │   │   │   ├── selectors.ts
 │   │   │   └── slice.ts
 │   |   ├── createPlaylist/
-│   │   │   ├── createPlaylist.css
-│   │   │   ├── CreatePlaylistComponent.tsx
+│   │   │   ├── CreatePlaylist.tsx
 │   │   │   ├── createPlaylistSagas.ts
 │   │   │   └── slice.ts
 │   |   ├── selectPlaylist/
@@ -139,6 +146,7 @@ project/
 │   │   │   ├── searchTrackSlice.ts
 │   │   │   └── searchTrack.css
 │   |   ├── editPlaylist/
+│   │   │   ├── EditPlaylist.tsx
 │   │   │   ├── editPlaylistSagas.ts
 │   │   │   └── slice.ts
 │   ├── store/          # redux logic
@@ -146,13 +154,12 @@ project/
 │   │   ├── sagas.ts
 │   │   └── store.ts
 │   ├── types/          # Typescript types 
+│   │   ├── requests.ts
 │   │   └── spotify.ts
 │   ├── styles/         # Styles
 │   │   ├── App.css
 │   │   └── index.css
 │   ├── tests/          # Tests
-│   │   ├── App.test.tsx
-│   │   └── setupTests.ts
 │   ├── App.tsx
 │   ├── index.tsx
 │   ├── react-app-env.d.ts  # Automatically generated, references to Types
@@ -167,23 +174,4 @@ project/
 
 [.nvmrc] says v16.14.2 but I to work with the latest versions what do you prefer any best practises #nvm use
 
-
-TODO
-
-Auto load in the daily discovery playlist 
-
-Re-order clear alerting 
-
-Alerting on the entire application 
-
-Clean up all code
-
-adding and remove tracks via search correctly 
-
-removing tracks via playlist
-
-
-Extra time
-
-Adding filters 
-
+Clearing cookies not possible due to same site policy for log out TODO

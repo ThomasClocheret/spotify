@@ -1,9 +1,10 @@
-import { call, put, debounce, select } from "redux-saga/effects";
 import axios from "axios";
-import { searchTracks, searchTracksSuccess, searchTracksFailure, setSearchTerm } from "./slice";
+import { call, put, debounce, select } from "redux-saga/effects";
+import { SagaIterator } from "redux-saga";
+
+import { searchTracksSuccess, searchTracksFailure, setSearchTerm } from "./slice";
 import { RootState } from "../../store/store";
 import { TrackObject } from "../../types/spotify";
-import { SagaIterator } from "redux-saga";
 
 const getSearchTerm = (state: RootState) => state.searchTrack.searchTerm;
 
@@ -34,7 +35,6 @@ function* performSearch(): SagaIterator {
     const tracks: TrackObject[] = response.data.tracks.items;
     yield put(searchTracksSuccess(tracks));
   } catch (error: any) {
-    console.error("Search failed:", error);
     yield put(searchTracksFailure(error.message || "Search failed"));
   }
 }

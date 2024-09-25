@@ -1,4 +1,5 @@
-// src/sagas/editPlaylistSagas.ts
+// src/containers/editPlaylist/editPlaylistSagas.ts
+
 import axios from 'axios';
 import { call, put, takeEvery, select } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -17,6 +18,8 @@ import {
   updatePlaylistFailure,
 } from './slice';
 import { authSelectors } from '../auth/selectors';
+import { displayAlert } from '../../appSlice';
+import { fetchPlaylistTracks, fetchPlaylists } from '../selectPlaylist/slice';
 
 interface ReorderTracksPayload {
   playlistId: string;
@@ -54,15 +57,11 @@ function* reorderTracksSaga(
       })
     );
 
-    console.log('Fetched playlist data:', playlistResponse.data);
-
     const currentSnapshotId: string = playlistResponse.data.snapshot_id;
 
     if (!currentSnapshotId) {
       throw new Error('Failed to retrieve snapshot_id from playlist data.');
     }
-
-    console.log('Current snapshot_id:', currentSnapshotId);
 
     // Step 2: Construct the request body with the latest snapshot_id
     const requestBody: any = {
@@ -71,8 +70,6 @@ function* reorderTracksSaga(
       range_length: 1,
       snapshot_id: currentSnapshotId,
     };
-
-    console.log('Reordering tracks request:', JSON.stringify(requestBody, null, 2));
 
     // Step 3: Make the PUT request to reorder tracks
     const response = yield call(() =>
@@ -92,21 +89,23 @@ function* reorderTracksSaga(
 
     // Step 4: Dispatch success action with the new snapshot_id
     yield put(reorderTracksSuccess({ newSnapshotId }));
-    console.log('Tracks reordered successfully:', response.data);
-  } catch (error: any) {
-    console.error('Error reordering tracks:', error);
+    yield put(displayAlert({ message: 'Tracks reordered successfully!', type: 'success' }));
 
+  } catch (error: any) {
+
+    let errorMessage = 'Failed to reorder tracks';
     if (error.response) {
-      console.error('Response data:', JSON.stringify(error.response.data, null, 2));
-      console.error('Response status:', error.response.status);
-      console.error('Response headers:', error.response.headers);
-    } else {
-      console.error('Error message:', error.message);
+      if (error.response.status === 403) {
+        errorMessage = 'You must be the owner of the playlist to reorder tracks.';
+      } else {
+        errorMessage = error.response.data.error.message || errorMessage;
+      }
+    } else if (error.message) {
+      errorMessage = error.message;
     }
 
-    const errorMessage =
-      error.response?.data?.error?.message || 'Failed to reorder tracks';
     yield put(reorderTracksFailure(errorMessage));
+    yield put(displayAlert({ message: errorMessage, type: 'error' }));
   }
 }
 
@@ -129,11 +128,19 @@ function* addTrackSaga(action: PayloadAction<AddTrackPayload>): Generator<any, v
     );
 
     yield put(addTrackSuccess());
-    console.log('Track added successfully:', response.data);
+    yield put(displayAlert({ message: 'Track added successfully!', type: 'success' }));
+    yield put(fetchPlaylistTracks(playlistId));
   } catch (error: any) {
-    console.error('Error adding track:', error);
-    const errorMessage = error.response?.data?.error?.message || 'Failed to add track';
+    let errorMessage = 'Failed to add track';
+    if (error.response && error.response.status === 403) {
+      errorMessage = 'You should be the owner of the playlist to add a track.';
+    } else if (error.response) {
+      errorMessage = error.response.data.error.message;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
     yield put(addTrackFailure(errorMessage));
+    yield put(displayAlert({ message: errorMessage, type: 'error' }));
   }
 }
 
@@ -152,54 +159,56 @@ function* removeTrackSaga(action: PayloadAction<AddTrackPayload>): Generator<any
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-        data: requestBody  // Axios DELETE requires 'data' to send a request body
+        data: requestBody
       })
     );
 
     yield put(removeTrackSuccess());
-    console.log('Track removed successfully:', response.data);
+    yield put(displayAlert({ message: 'Track removed successfully!', type: 'success' }));
+
+    // Refresh the playlist tracks
+    yield put(fetchPlaylistTracks(playlistId));
   } catch (error: any) {
-    console.error('Error removing track:', error);
-    const errorMessage = error.response?.data?.error?.message || 'Failed to remove track';
+    let errorMessage = 'Failed to remove track';
+    if (error.response && error.response.status === 403) {
+      errorMessage = 'You should be the owner of the playlist to remove a track.';
+    } else if (error.response) {
+      errorMessage = error.response.data.error.message;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
     yield put(removeTrackFailure(errorMessage));
+    yield put(displayAlert({ message: errorMessage, type: 'error' }));
   }
 }
-
-const updatePlaylistApi = (
-  playlistId: string,
-  accessToken: string,
-  name: string,
-  description: string,
-  isPublic: boolean
-) => {
-  return axios.put(
-    `https://api.spotify.com/v1/playlists/${playlistId}`,
-    {
-      name,
-      description,
-      public: isPublic,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    }
-  );
-};
 
 function* updatePlaylistSaga(action: PayloadAction<UpdatePlaylistPayload>): Generator<any, void, any> {
   try {
     const { playlistId, name, description = '', public: isPublic = true } = action.payload;
     const accessToken: string = yield select(authSelectors.getAccessToken);
 
-    const response = yield call(() => updatePlaylistApi(playlistId, accessToken, name, description, isPublic));
+    const response = yield call(() =>
+      axios.put(
+        `https://api.spotify.com/v1/playlists/${playlistId}`,
+        { name, description, public: isPublic },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+    );
 
     yield put(updatePlaylistSuccess());
-    console.log('Playlist updated successfully:', response.data);
+    yield put(displayAlert({ message: 'Playlist updated successfully!', type: 'success' }));
+
+    // Refresh playlists and tracks
+    yield put(fetchPlaylists());
+    yield put(fetchPlaylistTracks(playlistId));
   } catch (error: any) {
-    console.error('Error updating playlist:', error);
     yield put(updatePlaylistFailure(error.message));
+    yield put(displayAlert({ message: error.message || 'Failed to update playlist.', type: 'error' }));
   }
 }
 
